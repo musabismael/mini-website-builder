@@ -15,7 +15,7 @@ export default function ColorPicker({ label, color, onChange }: ColorPickerProps
   }, [onChange])
 
   return (
-    <div className="relative">
+    <div className="relative mb-2 md:mb-0">
       <div className="flex flex-col items-start">
         <label htmlFor={`color-picker-${label}`} className="mb-1 text-sm font-medium text-gray-700">
           {label}

@@ -16,6 +16,7 @@ export default function WebsiteBuilder() {
   const [isClient, setIsClient] = useState(false)
   const [sections, setSections] = useState<Section[]>([])
   const [theme, setTheme] = useState<Theme>(defaultTheme)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
   useEffect(() => {
     setIsClient(true)
@@ -96,12 +97,18 @@ export default function WebsiteBuilder() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex h-full">
-        <Sidebar />
+      <div className="flex flex-col h-full md:flex-row">
+        <button
+          className="md:hidden p-2 bg-blue-500 text-white"
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        >
+          {isSidebarOpen ? 'Close Sidebar' : 'Open Sidebar'}
+        </button>
+        {isSidebarOpen && <Sidebar className="w-full md:w-64" />}
         <div className="flex-1 flex flex-col">
-          <div className="bg-white shadow p-4 flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-800">Mini Website Builder</h1>
-            <div className="flex space-x-4">
+          <div className="bg-white shadow p-4 flex flex-wrap justify-between items-center">
+            <h1 className="text-2xl font-bold text-gray-800 w-full md:w-auto mb-4 md:mb-0">Mini Website Builder</h1>
+            <div className="flex flex-wrap justify-center md:justify-end space-y-2 md:space-y-0 space-x-0 md:space-x-4">
               <ColorPicker label="Primary Color" color={theme.primaryColor} onChange={(color) => setTheme(prev => ({ ...prev, primaryColor: color }))} />
               <ColorPicker label="Secondary Color" color={theme.secondaryColor} onChange={(color) => setTheme(prev => ({ ...prev, secondaryColor: color }))} />
               <ColorPicker label="Text Color" color={theme.textColor} onChange={(color) => setTheme(prev => ({ ...prev, textColor: color }))} />

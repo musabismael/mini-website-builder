@@ -4,7 +4,11 @@ import { Droppable, Draggable } from 'react-beautiful-dnd'
 import { sectionTypes } from '@/app/utils/sectionUtils'
 import { useEffect, useState } from 'react'
 
-export default function Sidebar() {
+interface SidebarProps {
+  className?: string;
+}
+
+export default function Sidebar({ className = '' }: SidebarProps) {
   const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
@@ -13,7 +17,7 @@ export default function Sidebar() {
 
   if (!isClient) {
     return (
-      <div className="w-64 bg-white shadow-md p-4">
+      <div className={`bg-white shadow-md p-4 ${className}`}>
         <h2 className="text-2xl font-bold mb-4">Sections</h2>
         <ul className="space-y-2">
           {sectionTypes.map((type) => (
@@ -31,7 +35,7 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="w-64 bg-white shadow-md p-4">
+    <div className={`bg-white shadow-md p-4 ${className}`}>
       <h2 className="text-2xl font-bold mb-4">Sections</h2>
       <Droppable droppableId="sidebar" isDropDisabled={true}>
         {(provided) => (

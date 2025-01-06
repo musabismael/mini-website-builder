@@ -12,6 +12,7 @@
 body {
   color: var(--color-text);
   background-color: var(--color-background);
+  font-family: 'Inter', sans-serif;
 }
 
 /* Custom styles for the Mini Website Builder */
