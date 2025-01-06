@@ -3,19 +3,67 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
   }
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
 }
+
+/* Custom styles for the Mini Website Builder */
+.draggable-item {
+  @apply cursor-move;
+}
+
+.section-wrapper {
+  @apply relative;
+}
+
+.section-controls {
+  @apply absolute top-2 right-2 flex space-x-2 opacity-0 transition-opacity duration-300;
+}
+
+.section-wrapper:hover .section-controls {
+  @apply opacity-100;
+}
+
+.color-picker-wrapper {
+  @apply relative inline-block;
+}
+
+.color-picker-popover {
+  @apply absolute z-10 mt-2;
+}
+
+.button {
+  @apply px-4 py-2 rounded transition duration-300;
+}
+
+.button-primary {
+  @apply bg-blue-500 text-white hover:bg-blue-600;
+}
+
+.button-secondary {
+  @apply bg-gray-500 text-white hover:bg-gray-600;
+}
+
+.input {
+  @apply px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
