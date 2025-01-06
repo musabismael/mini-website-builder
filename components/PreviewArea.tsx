@@ -1,5 +1,5 @@
 import { Droppable, Draggable } from 'react-beautiful-dnd'
-import { Section } from '@/app/types/section'
+import { Section, SectionProps, HeaderProps, HeroProps, FooterProps, ContentProps, FeaturesProps, TestimonialsProps, PricingProps, TeamProps, CTAProps } from '@/app/types/section'
 import { Theme } from '@/app/types/theme'
 import { Edit, Trash2 } from 'lucide-react'
 import dynamic from 'next/dynamic'
@@ -10,30 +10,39 @@ const Footer = dynamic(() => import('@/components/Footer'))
 const Content = dynamic(() => import('@/components/Content'))
 const Features = dynamic(() => import('@/components/Features'))
 const CTA = dynamic(() => import('@/components/CTA'))
+const Testimonials = dynamic(() => import('@/components/Testimonials'))
+const Pricing = dynamic(() => import('@/components/Pricing'))
+const Team = dynamic(() => import('@/components/Team'))
 
 interface PreviewAreaProps {
   sections: Section[]
-  updateSection: (id: string, newProps: any) => void
+  updateSection: (id: string, newProps: SectionProps) => void
   deleteSection: (id: string) => void
   theme: Theme
 }
 
 export default function PreviewArea({ sections, updateSection, deleteSection, theme }: PreviewAreaProps) {
   const renderSection = (section: Section) => {
-    const props = { ...section.props, theme }
+    const commonProps = { theme };
     switch (section.type) {
       case 'header':
-        return <Header {...props} />
+        return <Header {...commonProps} {...(section.props as HeaderProps)} />
       case 'hero':
-        return <Hero {...props} />
+        return <Hero {...commonProps} {...(section.props as HeroProps)} />
       case 'footer':
-        return <Footer {...props} />
+        return <Footer {...commonProps} {...(section.props as FooterProps)} />
       case 'content':
-        return <Content {...props} />
+        return <Content {...commonProps} {...(section.props as ContentProps)} />
       case 'features':
-        return <Features {...props} />
+        return <Features {...commonProps} {...(section.props as FeaturesProps)} />
       case 'cta':
-        return <CTA {...props} />
+        return <CTA {...commonProps} {...(section.props as CTAProps)} />
+      case 'testimonials':
+        return <Testimonials {...commonProps} {...(section.props as TestimonialsProps)} />
+      case 'pricing':
+        return <Pricing {...commonProps} {...(section.props as PricingProps)} />
+      case 'team':
+        return <Team {...commonProps} {...(section.props as TeamProps)} />
       default:
         return null
     }
@@ -60,7 +69,7 @@ export default function PreviewArea({ sections, updateSection, deleteSection, th
                           const newProps = prompt('Enter new props (JSON format):', JSON.stringify(section.props, null, 2))
                           if (newProps) {
                             try {
-                              updateSection(section.id, JSON.parse(newProps))
+                              updateSection(section.id, JSON.parse(newProps) as SectionProps)
                             } catch (error) {
                               console.error('Invalid JSON:', error)
                             }
@@ -89,4 +98,3 @@ export default function PreviewArea({ sections, updateSection, deleteSection, th
     </div>
   )
 }
-

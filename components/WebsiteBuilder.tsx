@@ -4,8 +4,8 @@ import { useState, useCallback, useMemo, useEffect } from 'react'
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
 import Sidebar from './Sidebar'
 import PreviewArea from './PreviewArea'
-import { Section } from '@/app/types/section'
-import { Theme } from '@/app/types/theme'
+import { Section, SectionProps } from '@/app/types/section'
+import { Theme, defaultTheme, setTheme } from '@/app/theme/themeConfig'
 import { nanoid } from 'nanoid'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -14,15 +14,15 @@ import ColorPicker from './ColorPicker'
 import { getDefaultProps } from '@/app/utils/sectionUtils'
 
 export default function WebsiteBuilder() {
+  const [isClient, setIsClient] = useState(false)
   const [sections, setSections] = useState<Section[]>([])
-  const [theme, setTheme] = useState<Theme>({
-    primaryColor: '#3B82F6',
-    secondaryColor: '#1F2937',
-    textColor: '#111827',
-    backgroundColor: '#F3F4F6',
-  })
+  const [theme, setThemeState] = useState<Theme>(defaultTheme)
 
   const debouncedTheme = useDebounce(theme, 300)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const onDragEnd = useCallback((result: DropResult) => {
     const { source, destination } = result
@@ -48,7 +48,7 @@ export default function WebsiteBuilder() {
     }
   }, [])
 
-  const updateSection = useCallback((id: string, newProps: any) => {
+  const updateSection = useCallback((id: string, newProps: SectionProps) => {
     setSections(prevSections => 
       prevSections.map(section => 
         section.id === id ? { ...section, props: { ...section.props, ...newProps } } : section
@@ -82,7 +82,7 @@ export default function WebsiteBuilder() {
         try {
           const { sections: importedSections, theme: importedTheme } = JSON.parse(content)
           setSections(importedSections)
-          setTheme(importedTheme)
+          setThemeState(importedTheme)
           toast.success('Configuration imported successfully!')
         } catch (error) {
           console.error('Error parsing imported file:', error)
@@ -96,28 +96,29 @@ export default function WebsiteBuilder() {
   const memoizedSections = useMemo(() => sections, [sections])
 
   useEffect(() => {
-    document.documentElement.style.setProperty('--primary-color', theme.primaryColor)
-    document.documentElement.style.setProperty('--secondary-color', theme.secondaryColor)
-    document.documentElement.style.setProperty('--background-color', theme.backgroundColor)
-    document.documentElement.style.setProperty('--text-color', theme.textColor)
-  }, [theme])
+    setTheme(debouncedTheme)
+  }, [debouncedTheme])
+
+  if (!isClient) {
+    return <div>Loading...</div>
+  }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex h-full">
         <Sidebar />
         <div className="flex-1 flex flex-col">
-          <div className="bg-white shadow p-4 flex justify-between items-center">
-            <h1 className="text-2xl font-bold">Mini Website Builder</h1>
+          <div className="bg-background shadow p-4 flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-text">Mini Website Builder</h1>
             <div className="flex space-x-4">
-              <ColorPicker label="Primary Color" color={theme.primaryColor} onChange={(color) => setTheme(prev => ({ ...prev, primaryColor: color }))} />
-              <ColorPicker label="Secondary Color" color={theme.secondaryColor} onChange={(color) => setTheme(prev => ({ ...prev, secondaryColor: color }))} />
-              <ColorPicker label="Text Color" color={theme.textColor} onChange={(color) => setTheme(prev => ({ ...prev, textColor: color }))} />
-              <ColorPicker label="Background Color" color={theme.backgroundColor} onChange={(color) => setTheme(prev => ({ ...prev, backgroundColor: color }))} />
-              <button onClick={exportConfig} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">
+              <ColorPicker label="Primary Color" color={theme.primaryColor} onChange={(color) => setThemeState(prev => ({ ...prev, primaryColor: color }))} />
+              <ColorPicker label="Secondary Color" color={theme.secondaryColor} onChange={(color) => setThemeState(prev => ({ ...prev, secondaryColor: color }))} />
+              <ColorPicker label="Text Color" color={theme.textColor} onChange={(color) => setThemeState(prev => ({ ...prev, textColor: color }))} />
+              <ColorPicker label="Background Color" color={theme.backgroundColor} onChange={(color) => setThemeState(prev => ({ ...prev, backgroundColor: color }))} />
+              <button onClick={exportConfig} className="button button-primary">
                 Export
               </button>
-              <label className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300 cursor-pointer">
+              <label className="button button-secondary cursor-pointer">
                 Import
                 <input type="file" onChange={importConfig} className="hidden" accept=".json" />
               </label>
@@ -135,4 +136,3 @@ export default function WebsiteBuilder() {
     </DragDropContext>
   )
 }
-
