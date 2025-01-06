@@ -32,7 +32,7 @@ Mini Website Builder is a Next.js application that allows users to create simple
 
 1. Clone the repository:
    \`\`\`
-   git clone https://github.com/yourusername/mini-website-builder.git
+   git clone https://github.com/musabismael/mini-website-builder
    cd mini-website-builder
    \`\`\`
 

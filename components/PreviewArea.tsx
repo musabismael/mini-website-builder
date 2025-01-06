@@ -49,19 +49,19 @@ export default function PreviewArea({ sections, updateSection, deleteSection, th
   }
 
   return (
-    <div className="flex-1 p-4 overflow-auto" style={{ backgroundColor: theme.backgroundColor }}>
+    <div className="flex-1 p-4 overflow-auto" style={{ backgroundColor: theme.backgroundColor, color: theme.textColor }}>
       <h2 className="text-xl font-bold mb-4" style={{ color: theme.textColor }}>Preview</h2>
       <Droppable droppableId="preview">
         {(provided) => (
           <div {...provided.droppableProps} ref={provided.innerRef} className="min-h-full border-2 border-dashed border-gray-300 p-4 rounded-lg">
             {sections.map((section, index) => (
               <Draggable key={section.id} draggableId={section.id} index={index}>
-                {(provided) => (
+                {(provided, snapshot) => (
                   <div
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    className="mb-4 relative group"
+                    className={`mb-4 relative group ${snapshot.isDragging ? 'opacity-50' : ''}`}
                   >
                     <div className="absolute top-2 right-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
                       <button
@@ -69,7 +69,7 @@ export default function PreviewArea({ sections, updateSection, deleteSection, th
                           const newProps = prompt('Enter new props (JSON format):', JSON.stringify(section.props, null, 2))
                           if (newProps) {
                             try {
-                              updateSection(section.id, JSON.parse(newProps) as SectionProps)
+                              updateSection(section.id, JSON.parse(newProps))
                             } catch (error) {
                               console.error('Invalid JSON:', error)
                             }

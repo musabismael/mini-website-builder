@@ -1,24 +1,21 @@
 'use client'
 
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
 import Sidebar from './Sidebar'
 import PreviewArea from './PreviewArea'
 import { Section, SectionProps } from '@/app/types/section'
-import { Theme, defaultTheme, setTheme } from '@/app/theme/themeConfig'
+import { Theme, defaultTheme } from '@/app/theme/themeConfig'
 import { nanoid } from 'nanoid'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useDebounce } from '@/app/hooks/useDebounce'
 import ColorPicker from './ColorPicker'
 import { getDefaultProps } from '@/app/utils/sectionUtils'
 
 export default function WebsiteBuilder() {
   const [isClient, setIsClient] = useState(false)
   const [sections, setSections] = useState<Section[]>([])
-  const [theme, setThemeState] = useState<Theme>(defaultTheme)
-
-  const debouncedTheme = useDebounce(theme, 300)
+  const [theme, setTheme] = useState<Theme>(defaultTheme)
 
   useEffect(() => {
     setIsClient(true)
@@ -82,7 +79,7 @@ export default function WebsiteBuilder() {
         try {
           const { sections: importedSections, theme: importedTheme } = JSON.parse(content)
           setSections(importedSections)
-          setThemeState(importedTheme)
+          setTheme(importedTheme)
           toast.success('Configuration imported successfully!')
         } catch (error) {
           console.error('Error parsing imported file:', error)
@@ -93,12 +90,6 @@ export default function WebsiteBuilder() {
     }
   }, [])
 
-  const memoizedSections = useMemo(() => sections, [sections])
-
-  useEffect(() => {
-    setTheme(debouncedTheme)
-  }, [debouncedTheme])
-
   if (!isClient) {
     return <div>Loading...</div>
   }
@@ -108,27 +99,27 @@ export default function WebsiteBuilder() {
       <div className="flex h-full">
         <Sidebar />
         <div className="flex-1 flex flex-col">
-          <div className="bg-background shadow p-4 flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-text">Mini Website Builder</h1>
+          <div className="bg-white shadow p-4 flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-gray-800">Mini Website Builder</h1>
             <div className="flex space-x-4">
-              <ColorPicker label="Primary Color" color={theme.primaryColor} onChange={(color) => setThemeState(prev => ({ ...prev, primaryColor: color }))} />
-              <ColorPicker label="Secondary Color" color={theme.secondaryColor} onChange={(color) => setThemeState(prev => ({ ...prev, secondaryColor: color }))} />
-              <ColorPicker label="Text Color" color={theme.textColor} onChange={(color) => setThemeState(prev => ({ ...prev, textColor: color }))} />
-              <ColorPicker label="Background Color" color={theme.backgroundColor} onChange={(color) => setThemeState(prev => ({ ...prev, backgroundColor: color }))} />
-              <button onClick={exportConfig} className="button button-primary">
+              <ColorPicker label="Primary Color" color={theme.primaryColor} onChange={(color) => setTheme(prev => ({ ...prev, primaryColor: color }))} />
+              <ColorPicker label="Secondary Color" color={theme.secondaryColor} onChange={(color) => setTheme(prev => ({ ...prev, secondaryColor: color }))} />
+              <ColorPicker label="Text Color" color={theme.textColor} onChange={(color) => setTheme(prev => ({ ...prev, textColor: color }))} />
+              <ColorPicker label="Background Color" color={theme.backgroundColor} onChange={(color) => setTheme(prev => ({ ...prev, backgroundColor: color }))} />
+              <button onClick={exportConfig} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">
                 Export
               </button>
-              <label className="button button-secondary cursor-pointer">
+              <label className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300 cursor-pointer">
                 Import
                 <input type="file" onChange={importConfig} className="hidden" accept=".json" />
               </label>
             </div>
           </div>
           <PreviewArea 
-            sections={memoizedSections} 
+            sections={sections} 
             updateSection={updateSection}
             deleteSection={deleteSection}
-            theme={debouncedTheme}
+            theme={theme}
           />
         </div>
       </div>
