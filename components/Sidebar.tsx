@@ -1,6 +1,5 @@
 import { Droppable, Draggable } from 'react-beautiful-dnd'
-import { LayoutTemplate, Type, Image, FootprintsIcon as FooterIcon, Star, PhoneCall } from 'lucide-react'
-import { sectionTypes } from '../utils/sectionUtils'
+import { sectionTypes } from '@/app/utils/sectionUtils'
 
 export default function Sidebar() {
   return (

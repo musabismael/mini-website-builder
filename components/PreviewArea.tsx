@@ -1,15 +1,15 @@
 import { Droppable, Draggable } from 'react-beautiful-dnd'
-import { Section } from '../types/section'
-import { Theme } from '../types/theme'
+import { Section } from '@/app/types/section'
+import { Theme } from '@/app/types/theme'
 import { Edit, Trash2 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
-const Header = dynamic(() => import('./sections/Header'))
-const Hero = dynamic(() => import('./sections/Hero'))
-const Footer = dynamic(() => import('./sections/Footer'))
-const Content = dynamic(() => import('./sections/Content'))
-const Features = dynamic(() => import('./sections/Features'))
-const CTA = dynamic(() => import('./sections/CTA'))
+const Header = dynamic(() => import('@/components/Header'))
+const Hero = dynamic(() => import('@/components/Hero'))
+const Footer = dynamic(() => import('@/components/Footer'))
+const Content = dynamic(() => import('@/components/Content'))
+const Features = dynamic(() => import('@/components/Features'))
+const CTA = dynamic(() => import('@/components/CTA'))
 
 interface PreviewAreaProps {
   sections: Section[]

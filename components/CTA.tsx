@@ -1,4 +1,4 @@
-import { Theme } from '../../types/theme'
+import { Theme } from '@/app/types/theme'
 
 interface CTAProps {
   title: string

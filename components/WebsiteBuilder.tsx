@@ -4,14 +4,14 @@ import { useState, useCallback, useMemo, useEffect } from 'react'
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
 import Sidebar from './Sidebar'
 import PreviewArea from './PreviewArea'
-import { Section } from '../types/section'
-import { Theme } from '../types/theme'
+import { Section } from '@/app/types/section'
+import { Theme } from '@/app/types/theme'
 import { nanoid } from 'nanoid'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useDebounce } from '../hooks/useDebounce'
+import { useDebounce } from '@/app/hooks/useDebounce'
 import ColorPicker from './ColorPicker'
-import { getDefaultProps } from '../utils/sectionUtils'
+import { getDefaultProps } from '@/app/utils/sectionUtils'
 
 export default function WebsiteBuilder() {
   const [sections, setSections] = useState<Section[]>([])

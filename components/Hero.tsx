@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { Theme } from '../../types/theme'
+import { Theme } from '@/app/types/theme'
 
 interface HeroProps {
   title: string
